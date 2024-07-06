@@ -16,4 +16,13 @@ public class Userdata {
     public String getallUserData() {
         return "Username: " + Username + ", Password: " + Password + ", Usercode: " + Usercode + ", Time: " + time + ", Balance: " + balance;
     }
+
+    public int getUsernameandUsercode() {
+        return Usercode;
+    }
+
+    public UserDetails getUsernameAndUsercode() {
+        return new UserDetails(Username, Usercode);
+    }
+
 }
