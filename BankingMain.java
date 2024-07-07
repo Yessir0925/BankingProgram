@@ -34,15 +34,16 @@ public class BankingMain{
 
                 
                 Userdata newUser = new Userdata();
+                Scanner namepasswordsc = new Scanner(System.in);
                 System.out.print("Enter Name - ");
-                String usernameinp = usrinpsc.nextLine();
-                System.out.println("Enter Password - ");
-                String userpasswordinp = usrinpsc.nextLine();
-                System.out.println("Re enter password - ");
+                String usernameinp = namepasswordsc.nextLine();
+                System.out.print("Enter Password - ");
+                String userpasswordinp = namepasswordsc.nextLine();
                 LocalDateTime currentDateandTime = LocalDateTime.now();
                 newUser.newUserData(usernameinp, userpasswordinp, usercodemax, currentDateandTime, 0.00);
                 System.out.println(newUser.getallUserData());
                 break;
+                
 
 
 
@@ -52,6 +53,7 @@ public class BankingMain{
                 System.out.println("Menu");
                 break;
         }
+        usrinpsc.close();
         
     }
     static void Login(){
@@ -87,31 +89,33 @@ public class BankingMain{
     
     public static void main(String[] args){
         System.out.println("Main Menu");
-
         Scanner menuInpSc = new Scanner(System.in);
         int menuInp = 0;
         while(menuInp != 3){
             System.out.println("1. Create User");
             System.out.println("2. Login");
             System.out.print("3. Exit\n-  ");
-            menuInp = menuInpSc.nextInt();
-            switch(menuInp){
-                case 1:
-                    System.out.println("\nCreate User");
-                    CreateUser();
-                    break;
+            if (menuInpSc.hasNextInt()) {
+                menuInp = menuInpSc.nextInt();
+                menuInpSc.nextLine();
+                switch(menuInp){
+                    case 1:
+                        System.out.println("\nCreate User");
+                        CreateUser();
+                        break;
 
-                case 2:
+                    case 2:
 
-                    System.out.println("\nLogin User");
-                    //Login();
-                    break;
-                
-                case 3:
-                    System.out.println("Exiting Program");
-                    break;
+                        System.out.println("\nLogin User");
+                        //Login();
+                        break;
+                    
+                    case 3:
+                        System.out.println("Exiting Program");
+                        break;
+                }
+                menuInpSc.close();
             }
         }
-        menuInpSc.close();
     }
 }
