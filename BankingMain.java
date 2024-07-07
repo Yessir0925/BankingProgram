@@ -6,9 +6,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class BankingMain{
-    static void CreateUser(){
+    static void CreateUser(Scanner usrinpsc){
         //Create User
-        Scanner usrinpsc = new Scanner(System.in);
         System.out.println("1. Continue Create new user");
         System.out.print("2. Back to Menu\n-  ");
         int usrinp = usrinpsc.nextInt();
@@ -69,10 +68,9 @@ public class BankingMain{
                 break;
 
             case 2:
-                System.out.println("Menu");
+                System.out.println("\nMenu");
                 break;
         }
-        usrinpsc.close();
     }
     static void Login(){
         //Login
@@ -106,17 +104,17 @@ public class BankingMain{
     }
     
     public static void main(String[] args) {
-        Scanner menuinp = new Scanner(System.in);
+        Scanner usrinpsc = new Scanner(System.in);
         boolean finishmenu = false;
         do{
             System.out.println("1. Create User");
             System.out.println("2. Login");
             System.out.print("3. Exit\n-  ");
-            int menuinpint = menuinp.nextInt();
+            int menuinpint = usrinpsc.nextInt();
             switch(menuinpint){
                 case 1:
                     System.out.println("\nCreate User");
-                    CreateUser();
+                    CreateUser(usrinpsc);
                     finishmenu = false;
                     break;
                 case 2:
@@ -129,6 +127,6 @@ public class BankingMain{
                     break;
             }
         }while(finishmenu == false);
-        menuinp.close();
+        usrinpsc.close();
     }
 }
