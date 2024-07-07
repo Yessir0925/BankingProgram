@@ -15,41 +15,57 @@ public class BankingMain{
         int usrinp = usrinpsc.nextInt();
         switch(usrinp){
             case 1:
-                int usercodeinp = 0;
-                int usercodemax = 0;
-                try {
-                    File readCSVfirstLine = new File("Bankdata.csv");
-                    Scanner Reader = new Scanner(readCSVfirstLine);
-                    if (Reader.hasNextLine()) {
-                        String line = Reader.nextLine();
-                        usercodeinp = Integer.parseInt(line);
-                        usercodemax = usercodeinp + 1;
-                    }
-                    Reader.close();
-                } catch (IOException e) {
-                    System.out.println("IO Error");
-                }
-                Userdata newUser = new Userdata();
+                boolean Finish = false;
                 Scanner namepasswordsc = new Scanner(System.in);
-                System.out.print("Enter Name - ");
-                String usernameinp = namepasswordsc.nextLine();
+                while(Finish == false)
+                {    int usercodeinp = 0;
+                    int usercodemax = 0;
+                    try {
+                        File readCSVfirstLine = new File("Bankdata.csv");
+                        Scanner Reader = new Scanner(readCSVfirstLine);
+                        if (Reader.hasNextLine()) {
+                            String line = Reader.nextLine();
+                            usercodeinp = Integer.parseInt(line);
+                            usercodemax = usercodeinp + 1;
+                        }
+                        Reader.close();
+                    } catch (IOException e) {
+                        System.out.println("IO Error");
+                    }
+                    Userdata newUser = new Userdata();
+                    System.out.print("Enter Name - ");
+                    String usernameinp = namepasswordsc.nextLine();
 
 
 
-                //password validation
-                System.out.print("Enter Password - ");
-                String userpasswordinp = namepasswordsc.nextLine();
+                    //password validation
+                    System.out.print("Enter Password - ");
+                    String userpasswordinp = namepasswordsc.nextLine();
+                    
 
 
 
 
-
-                LocalDateTime currentDateandTime = LocalDateTime.now();
-                newUser.newUserData(usernameinp, userpasswordinp, usercodemax, currentDateandTime, 0.00);
-                System.out.println("\n" + newUser.getallUserData());
-                System.out.println("Is all information correct?");
-                System.out.print("1.\n2.\n-  ");
-                break;
+                    LocalDateTime currentDateandTime = LocalDateTime.now();
+                    newUser.newUserData(usernameinp, userpasswordinp, usercodemax, currentDateandTime, 0.00);
+                    System.out.println("\n" + newUser.getallUserData());
+                    //Final want to print name and password only
+                    System.out.println("Is all information correct?");
+                    System.out.print("1. Yes\n2. No\n-  ");
+                    int usrinp2 = namepasswordsc.nextInt();
+                    switch(usrinp2){
+                        case 1:
+                            //newUser.pushCSV(usernameinp, userpasswordinp, usercodemax, currentDateandTime.toString(), 0.00);
+                            System.out.println("Appended");
+                            Finish = true;
+                            break;
+                        case 2:
+                            System.out.println("Re enter Credentials");
+                            Finish = false;
+                            break;
+                    }
+                }
+                namepasswordsc.close();
                 
 
 
@@ -62,7 +78,6 @@ public class BankingMain{
         }
         usrinpsc.close();
         return true;
-        
     }
     static void Login(){
         //Login

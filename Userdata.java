@@ -67,11 +67,11 @@ public class Userdata {
 
     public void pushCSV(String Username, String Password, int Usercode, String time, double balance) {
         try {
-            FileWriter pushUsrtoCSV = new FileWriter("Bankdata.csv");
+            FileWriter pushUsrtoCSV = new FileWriter("Bankdata.csv", true);
             pushUsrtoCSV.write(Username + "," + Password + "," + Usercode + "," + time + "," + balance + "\n");
             pushUsrtoCSV.close();
         } catch (IOException e) {
-            System.out.println("Io Error");
+            System.out.println("IO Error");
         }
     }
 
