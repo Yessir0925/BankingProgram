@@ -6,12 +6,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class BankingMain{
-    static boolean CreateUser(){
+    static void CreateUser(){
         //Create User
         Scanner usrinpsc = new Scanner(System.in);
         System.out.println("1. Continue Create new user");
         System.out.print("2. Back to Menu\n-  ");
         int usrinp = usrinpsc.nextInt();
+
         switch(usrinp){
             case 1:
                 boolean Finish = false;
@@ -65,18 +66,13 @@ public class BankingMain{
                     }
                 }
                 namepasswordsc.close();
-                
-
-
-
-
+                break;
 
             case 2:
                 System.out.println("Menu");
                 break;
         }
         usrinpsc.close();
-        return true;
     }
     static void Login(){
         //Login
@@ -109,39 +105,30 @@ public class BankingMain{
                     System.out.println("Moderator Access");
     }
     
-    public static void main(String[] args){
-        System.out.println("Main Menu");
-        Scanner menuInpSc = new Scanner(System.in);
-        int menuInp = 0;
-        while(menuInp != 3){
+    public static void main(String[] args) {
+        Scanner menuinp = new Scanner(System.in);
+        boolean finishmenu = false;
+        do{
             System.out.println("1. Create User");
             System.out.println("2. Login");
             System.out.print("3. Exit\n-  ");
-            if (menuInpSc.hasNextInt()) {
-                menuInp = menuInpSc.nextInt();
-                menuInpSc.nextLine();
-                switch(menuInp){
-                    case 1:
-                        System.out.println("\nCreate User");
-                        boolean userCreated = CreateUser();
-                        if (userCreated) {
-                            menuInp = 3;
-                        }
-                        break;
-
-
-                    case 2:
-
-                        System.out.println("\nLogin User");
-                        //Login();
-                        break;
-                    
-                    case 3:
-                        System.out.println("Exiting Program");
-                        break;
-                }
+            int menuinpint = menuinp.nextInt();
+            switch(menuinpint){
+                case 1:
+                    System.out.println("\nCreate User");
+                    CreateUser();
+                    finishmenu = false;
+                    break;
+                case 2:
+                    System.out.println("\nLogin");
+                    finishmenu = false;
+                    break;
+                case 3:
+                    System.out.println("\nShut Down");
+                    finishmenu = true;
+                    break;
             }
-        }
-        menuInpSc.close();
+        }while(finishmenu == false);
+        menuinp.close();
     }
 }
