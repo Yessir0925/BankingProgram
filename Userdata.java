@@ -58,4 +58,7 @@ public class Userdata {
     public double getBalance() {
         return balance;
     }
+
+    //Push to csv file
+    //Pull from csv file
 }

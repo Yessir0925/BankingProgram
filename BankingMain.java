@@ -15,6 +15,7 @@ public class BankingMain{
             System.out.println("Password - ");
             String loginpassinp = login.nextLine();
             //if username and password match
+            login.close();
 
 
             //if appdata file doesn't exist
