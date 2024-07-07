@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class BankingMain{
-    static void CreateUser(){
+    static boolean CreateUser(){
         //Create User
         Scanner usrinpsc = new Scanner(System.in);
         System.out.println("1. Continue Create new user");
@@ -29,19 +29,26 @@ public class BankingMain{
                 } catch (IOException e) {
                     System.out.println("IO Error");
                 }
-
-
-
-                
                 Userdata newUser = new Userdata();
                 Scanner namepasswordsc = new Scanner(System.in);
                 System.out.print("Enter Name - ");
                 String usernameinp = namepasswordsc.nextLine();
+
+
+
+                //password validation
                 System.out.print("Enter Password - ");
                 String userpasswordinp = namepasswordsc.nextLine();
+
+
+
+
+
                 LocalDateTime currentDateandTime = LocalDateTime.now();
                 newUser.newUserData(usernameinp, userpasswordinp, usercodemax, currentDateandTime, 0.00);
-                System.out.println(newUser.getallUserData());
+                System.out.println("\n" + newUser.getallUserData());
+                System.out.println("Is all information correct?");
+                System.out.print("1.\n2.\n-  ");
                 break;
                 
 
@@ -54,6 +61,7 @@ public class BankingMain{
                 break;
         }
         usrinpsc.close();
+        return true;
         
     }
     static void Login(){
@@ -101,8 +109,12 @@ public class BankingMain{
                 switch(menuInp){
                     case 1:
                         System.out.println("\nCreate User");
-                        CreateUser();
+                        boolean userCreated = CreateUser();
+                        if (userCreated) {
+                            menuInp = 3;
+                        }
                         break;
+
 
                     case 2:
 
@@ -114,8 +126,8 @@ public class BankingMain{
                         System.out.println("Exiting Program");
                         break;
                 }
-                menuInpSc.close();
             }
         }
+        menuInpSc.close();
     }
 }
