@@ -1,15 +1,17 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Userdata {
     private String Username;
     private String Password;
     private int Usercode;
-    private int time;
+    private LocalDateTime time;
     private double balance;
 
     //Setters
-    public void newUserData(String Username, String Password, int Usercode, int time, double balance){
+    public void newUserData(String Username, String Password, int Usercode, LocalDateTime time, double balance){
         this.Username = Username;
         this.Password = Password;
         this.Usercode = Usercode;
@@ -21,7 +23,7 @@ public class Userdata {
         this.balance = balance;
     }
 
-    public void setTime(int time) {
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
 
@@ -38,7 +40,11 @@ public class Userdata {
     }
 
     //Getters
-    
+
+    public String getallUserData() {
+        return "Username: " + Username + ", Password: " + Password + ", Usercode: " + Usercode + ", Time: " + time + ", Balance: " + balance;
+    }
+
     public String getUsername() {
         return Username;
     }
@@ -51,7 +57,7 @@ public class Userdata {
         return Password;
     }
 
-    public int getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
@@ -59,9 +65,11 @@ public class Userdata {
         return balance;
     }
 
-    public void pushCSV(String Username, String Password, int Usercode, int time, double balance) {
-        try (FileWriter pushUsrtoCSV = new FileWriter("Bankdata.csv")) {
+    public void pushCSV(String Username, String Password, int Usercode, String time, double balance) {
+        try {
+            FileWriter pushUsrtoCSV = new FileWriter("Bankdata.csv");
             pushUsrtoCSV.write(Username + "," + Password + "," + Usercode + "," + time + "," + balance + "\n");
+            pushUsrtoCSV.close();
         } catch (IOException e) {
             System.out.println("Io Error");
         }
