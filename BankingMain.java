@@ -6,7 +6,6 @@ public class BankingMain{
         System.out.println("Create User");
         Userdata User1 = new Userdata();
         User1.newUserData("Caleb", "password123", 12345, 10, 1000.0);
-        System.out.println(User1.getallUserData());
         
         System.out.println("Login");
             Scanner login = new Scanner(System.in);

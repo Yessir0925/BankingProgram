@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Userdata {
     private String Username;
     private String Password;
@@ -35,10 +38,7 @@ public class Userdata {
     }
 
     //Getters
-    public String getallUserData() {
-        return "Username: " + Username + ", Password: " + Password + ", Usercode: " + Usercode + ", Time: " + time + ", Balance: " + balance;
-    }
-
+    
     public String getUsername() {
         return Username;
     }
@@ -59,6 +59,13 @@ public class Userdata {
         return balance;
     }
 
-    //Push to csv file
+    public void pushCSV(String Username, String Password, int Usercode, int time, double balance) {
+        try (FileWriter pushUsrtoCSV = new FileWriter("Bankdata.csv")) {
+            pushUsrtoCSV.write(Username + "," + Password + "," + Usercode + "," + time + "," + balance + "\n");
+        } catch (IOException e) {
+            System.out.println("Io Error");
+        }
+    }
+
     //Pull from csv file
 }
