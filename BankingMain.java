@@ -14,6 +14,7 @@ public class BankingMain{
         switch(usrinp){
             case 1:
                 boolean Finish = false;
+                usrinpsc.nextLine(); //Clear scanner buffer
                 while(Finish == false)
                 {    int usercodeinp = 0;
                     int usercodemax = 0;
@@ -29,37 +30,36 @@ public class BankingMain{
                     } catch (IOException e) {
                         System.out.println("IO Error");
                     }
-                    usrinpsc.nextLine(); //Clear scanner buffer
                     Userdata newUser = new Userdata();
                     System.out.print("Enter Name - ");
                     String usernameinp = usrinpsc.nextLine();
-
-
-                    //include password validation
                     System.out.print("Enter Password - ");
                     String userpasswordinp = usrinpsc.nextLine();
-                    //password validation here
+                    System.out.print("Re-enter password - ");
+                    String userpasswordinp2 = usrinpsc.nextLine();
 
 
-
-
-                    LocalDateTime currentDateandTime = LocalDateTime.now();
-                    newUser.newUserData(usernameinp, userpasswordinp, usercodemax, currentDateandTime, 0.00);
-                    System.out.println("\n" + newUser.getallUserData());
-                    //Final want to print name and password only
-                    System.out.println("Is all information correct?");
-                    System.out.print("1. Yes\n2. No\n-  ");
-                    int usrinp2 = usrinpsc.nextInt();
-                    switch(usrinp2){
-                        case 1:
-                            //newUser.pushCSV(usernameinp, userpasswordinp, usercodemax, currentDateandTime.toString(), 0.00);
-                            System.out.println("Appended");
-                            Finish = true;
-                            break;
-                        case 2:
-                            System.out.println("Re enter Credentials");
-                            Finish = false;
-                            break;
+                    if(userpasswordinp.length() >= 8 && userpasswordinp.equals(userpasswordinp2)){
+                        LocalDateTime currentDateandTime = LocalDateTime.now();
+                        newUser.newUserData(usernameinp, userpasswordinp, usercodemax, currentDateandTime, 0.00);
+                        System.out.println("\n" + newUser.getallUserData());
+                        //Final want to print name and password only
+                        System.out.println("Is all information correct?");
+                        System.out.print("1. Yes\n2. No\n-  ");
+                        int usrinp2 = usrinpsc.nextInt();
+                        switch(usrinp2){
+                            case 1:
+                                //newUser.pushCSV(usernameinp, userpasswordinp, usercodemax, currentDateandTime.toString(), 0.00);
+                                System.out.println("Appended\n");
+                                Finish = true;
+                                break;
+                            case 2:
+                                System.out.println("Re enter Credentials\n");
+                                Finish = false;
+                                break;
+                        }
+                    } else{
+                        System.out.println("Password must be at least 8 characters long\n");
                     }
                 }
                 break;
