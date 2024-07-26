@@ -39,10 +39,10 @@ public class BankingMain{
                     String userpasswordinp2 = usrinpsc.nextLine();
 
 
-                    if(userpasswordinp.length() >= 8 && userpasswordinp.equals(userpasswordinp2)){
+                    if(userpasswordinp.length() >= 8 && userpasswordinp.equals(userpasswordinp2) == true){
                         LocalDateTime currentDateandTime = LocalDateTime.now();
                         newUser.newUserData(usernameinp, userpasswordinp, usercodemax, currentDateandTime, 0.00);
-                        System.out.println("\n" + newUser.getallUserData());
+                        System.out.println("\n" + newUser.getNameandPassword());
                         //Final want to print name and password only
                         System.out.println("Is all information correct?");
                         System.out.print("1. Yes\n2. No\n-  ");
@@ -58,8 +58,10 @@ public class BankingMain{
                                 Finish = false;
                                 break;
                         }
-                    } else{
+                    } else if(userpasswordinp.length() < 8){
                         System.out.println("Password must be at least 8 characters long\n");
+                    } else if(userpasswordinp.equals(userpasswordinp2) == false){
+                        System.out.println("Passwords do not match\n");
                     }
                 }
                 break;

@@ -40,6 +40,10 @@ public class Userdata {
 
     //Getters
 
+    public String getNameandPassword() {
+        return "Username: " + Username + ", Password: " + Password ;
+    }
+
     public String getallUserData() {
         return "Username: " + Username + ", Password: " + Password + ", Usercode: " + Usercode + ", Time: " + time + ", Balance: " + balance;
     }
