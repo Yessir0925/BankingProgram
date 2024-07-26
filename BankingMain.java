@@ -11,11 +11,9 @@ public class BankingMain{
         System.out.println("1. Continue Create new user");
         System.out.print("2. Back to Menu\n-  ");
         int usrinp = usrinpsc.nextInt();
-
         switch(usrinp){
             case 1:
                 boolean Finish = false;
-                Scanner namepasswordsc = new Scanner(System.in);
                 while(Finish == false)
                 {    int usercodeinp = 0;
                     int usercodemax = 0;
@@ -33,14 +31,14 @@ public class BankingMain{
                     }
                     Userdata newUser = new Userdata();
                     System.out.print("Enter Name - ");
-                    String usernameinp = namepasswordsc.nextLine();
+                    String usernameinp = usrinpsc.nextLine();
+                    usrinpsc.nextLine(); //Clear scanner buffer
 
 
-
-                    //password validation
+                    //include password validation
                     System.out.print("Enter Password - ");
-                    String userpasswordinp = namepasswordsc.nextLine();
-                    
+                    String userpasswordinp = usrinpsc.nextLine();
+                    //password validation here
 
 
 
@@ -51,7 +49,7 @@ public class BankingMain{
                     //Final want to print name and password only
                     System.out.println("Is all information correct?");
                     System.out.print("1. Yes\n2. No\n-  ");
-                    int usrinp2 = namepasswordsc.nextInt();
+                    int usrinp2 = usrinpsc.nextInt();
                     switch(usrinp2){
                         case 1:
                             //newUser.pushCSV(usernameinp, userpasswordinp, usercodemax, currentDateandTime.toString(), 0.00);
@@ -64,7 +62,6 @@ public class BankingMain{
                             break;
                     }
                 }
-                namepasswordsc.close();
                 break;
 
             case 2:
