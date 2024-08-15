@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
 
 public class BankingMain{
     static void CreateUser(Scanner usrinpsc){
@@ -18,6 +20,8 @@ public class BankingMain{
                 while(Finish == false)
                 {    int usercodeinp = 0;
                     int usercodemax = 0;
+
+
                     try {
                         File readCSVfirstLine = new File("Bankdata.csv");
                         Scanner Reader = new Scanner(readCSVfirstLine);
@@ -30,6 +34,8 @@ public class BankingMain{
                     } catch (IOException e) {
                         System.out.println("IO Error");
                     }
+
+
                     Userdata newUser = new Userdata();
                     System.out.print("Enter Name - ");
                     String usernameinp = usrinpsc.nextLine();
@@ -37,13 +43,10 @@ public class BankingMain{
                     String userpasswordinp = usrinpsc.nextLine();
                     System.out.print("Re-enter password - ");
                     String userpasswordinp2 = usrinpsc.nextLine();
-
-
                     if(userpasswordinp.length() >= 8 && userpasswordinp.equals(userpasswordinp2) == true){
                         LocalDateTime currentDateandTime = LocalDateTime.now();
                         newUser.newUserData(usernameinp, userpasswordinp, usercodemax, currentDateandTime, 0.00);
                         System.out.println("\n" + newUser.getNameandPassword());
-                        //Final want to print name and password only
                         System.out.println("Is all information correct?");
                         System.out.print("1. Yes\n2. No\n-  ");
                         int usrinp2 = usrinpsc.nextInt();
@@ -71,6 +74,8 @@ public class BankingMain{
                 break;
         }
     }
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------s
     static void Login(){
         //Login
         System.out.println("Login");
@@ -101,7 +106,8 @@ public class BankingMain{
         
                     System.out.println("Moderator Access");
     }
-    
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args) {
         Scanner usrinpsc = new Scanner(System.in);
         boolean finishmenu = false;
