@@ -13,11 +13,12 @@ public class BankingMain{
         System.out.println("1. Continue Create new user");
         System.out.print("2. Back to Menu\n-  ");
         int usrinp = usrinpsc.nextInt();
+        usrinpsc.nextLine(); //Clear scanner buffer
         switch(usrinp){
             case 1:
                 boolean Finish = false;
-                usrinpsc.nextLine(); //Clear scanner buffer
-                while(Finish == false)
+                Userdata newUser = new Userdata();
+                do
                 {    int usercodeinp = 0;
                     int usercodemax = 0;
 
@@ -35,8 +36,7 @@ public class BankingMain{
                         System.out.println("IO Error");
                     }
 
-
-                    Userdata newUser = new Userdata();
+                    
                     System.out.print("Enter Name - ");
                     String usernameinp = usrinpsc.nextLine();
                     System.out.print("Enter Password - ");
@@ -50,6 +50,7 @@ public class BankingMain{
                         System.out.println("Is all information correct?");
                         System.out.print("1. Yes\n2. No\n-  ");
                         int usrinp2 = usrinpsc.nextInt();
+                        usrinpsc.nextLine();
                         switch(usrinp2){
                             case 1:
                                 //newUser.pushCSV(usernameinp, userpasswordinp, usercodemax, currentDateandTime.toString(), 0.00);
@@ -66,7 +67,7 @@ public class BankingMain{
                     } else if(userpasswordinp.equals(userpasswordinp2) == false){
                         System.out.println("Passwords do not match\n");
                     }
-                }
+                }while(Finish == false);
                 break;
 
             case 2:
