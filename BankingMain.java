@@ -1,11 +1,8 @@
 import java.util.Scanner;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.ArrayList;
+
 
 public class BankingMain{
     static void CreateUser(Scanner usrinpsc){
@@ -18,25 +15,22 @@ public class BankingMain{
             case 1:
                 boolean Finish = false;
                 Userdata newUser = new Userdata();
-                do
-                {    int usercodeinp = 0;
-                    int usercodemax = 0;
-
-
-                    try {
-                        File readCSVfirstLine = new File("Bankdata.csv");
-                        Scanner Reader = new Scanner(readCSVfirstLine);
-                        if (Reader.hasNextLine()) {
-                            String line = Reader.nextLine();
-                            usercodeinp = Integer.parseInt(line);
-                            usercodemax = usercodeinp + 1;
-                        }
-                        Reader.close();
-                    } catch (IOException e) {
-                        System.out.println("IO Error");
+                int usercodeinp = 0;
+                int usercodemax = 0;    
+                try {
+                    File readCSVfirstLine = new File("/full/path/to/Bankdata.csv");
+                    Scanner Reader = new Scanner(readCSVfirstLine);
+                    if (Reader.hasNextLine()) {
+                        String line = Reader.nextLine();
+                        usercodeinp = Integer.parseInt(line);
+                        usercodemax = usercodeinp + 1;
                     }
-
-                    
+                    Reader.close();
+                } catch (IOException e) {
+                    System.out.println("IO Error");
+                }
+                do
+                {                    
                     System.out.print("Enter Name - ");
                     String usernameinp = usrinpsc.nextLine();
                     System.out.print("Enter Password - ");
