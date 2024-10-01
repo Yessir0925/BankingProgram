@@ -27,7 +27,7 @@ public class BankingMain{
                     }
                     Reader.close();
                 } catch (IOException e) {
-                    System.out.println("IO Error");
+                    System.out.println("Io Exception - " + e.getMessage());
                 }
                 do
                 {                    
