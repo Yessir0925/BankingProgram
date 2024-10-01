@@ -67,16 +67,4 @@ public class Userdata {
     public double getBalance() {
         return balance;
     }
-
-    public void pushCSV(String Username, String Password, int Usercode, String time, double balance) {
-        try {
-            FileWriter pushUsrtoCSV = new FileWriter("Bankdata.csv", true);
-            pushUsrtoCSV.write(Username + "," + Password + "," + Usercode + "," + time + "," + balance + "\n");
-            pushUsrtoCSV.close();
-        } catch (IOException e) {
-            System.out.println("IO Error");
-        }
-    }
-
-    //Pull from csv file
 }

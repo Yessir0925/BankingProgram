@@ -1,10 +1,13 @@
 import java.util.Scanner;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.time.LocalDateTime;
 
 
 public class BankingMain{
+
     static void CreateUser(Scanner usrinpsc){
         //Create User
         System.out.println("1. Continue Create new user");
@@ -17,18 +20,15 @@ public class BankingMain{
                 Userdata newUser = new Userdata();
                 int usercodeinp = 0;
                 int usercodemax = 0;    
-                try {
-                    File readCSVfirstLine = new File("/full/path/to/Bankdata.csv");
-                    Scanner Reader = new Scanner(readCSVfirstLine);
-                    if (Reader.hasNextLine()) {
-                        String line = Reader.nextLine();
-                        usercodeinp = Integer.parseInt(line);
-                        usercodemax = usercodeinp + 1;
-                    }
-                    Reader.close();
-                } catch (IOException e) {
-                    System.out.println("Io Exception - " + e.getMessage());
+
+                try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
+                    Userdata lastUser = (Userdata) ois.readObject();
+                    usercodeinp = lastUser.getUsercode();
+                    usercodemax = usercodeinp + 1;
+                } catch (IOException | ClassNotFoundException e) {
+                    System.out.println("No previous user data found or error: " + e.getMessage());
                 }
+
                 do
                 {                    
                     System.out.print("Enter Name - ");
@@ -47,7 +47,7 @@ public class BankingMain{
                         usrinpsc.nextLine();
                         switch(usrinp2){
                             case 1:
-                                //newUser.pushCSV(usernameinp, userpasswordinp, usercodemax, currentDateandTime.toString(), 0.00);
+                                //Pushtofile
                                 System.out.println("Appended\n");
                                 Finish = true;
                                 break;
