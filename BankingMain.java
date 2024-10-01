@@ -1,10 +1,5 @@
+import java.io.*;
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
 
 
@@ -15,7 +10,7 @@ public class BankingMain{
         System.out.println("1. Continue Create new user");
         System.out.print("2. Back to Menu\n-  ");
         int usrinp = usrinpsc.nextInt();
-        usrinpsc.nextLine(); //Clear scanner buffer
+        usrinpsc.nextLine();
         switch(usrinp){
             case 1:
                 boolean Finish = false;
@@ -28,7 +23,8 @@ public class BankingMain{
                     usercodeinp = lastUser.getUsercode();
                     usercodemax = usercodeinp + 1;
                 } catch (IOException | ClassNotFoundException e) {
-                    System.out.println("IO Exception" + e.getMessage());
+                    System.out.println("IO Exception - " + e.getMessage());
+                    usercodemax = 1;
                 }
 
                 do
@@ -50,10 +46,10 @@ public class BankingMain{
                         switch(usrinp2){
                             case 1:
                                 try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Bankdata.ser", true))) {
-                                    oos.writeObject(newUser);
+                                    //oos.writeObject(newUser);
                                     System.out.println("Appended");
                                 } catch (IOException e) {
-                                    System.out.println("IO Exception" + e.getMessage());
+                                    System.out.println("IO Exception - " + e.getMessage());
                                 }
                                 Finish = true;
                                 break;
@@ -75,6 +71,7 @@ public class BankingMain{
                 break;
         }
     }
+
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------s
     static void Login(){
