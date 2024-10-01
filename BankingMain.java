@@ -1,8 +1,10 @@
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
 
 
@@ -21,12 +23,12 @@ public class BankingMain{
                 int usercodeinp = 0;
                 int usercodemax = 0;    
 
-                try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
-                    Userdata lastUser = (Userdata) ois.readObject();
+                try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
+                    Userdata lastUser = (Userdata) fileinput.readObject();
                     usercodeinp = lastUser.getUsercode();
                     usercodemax = usercodeinp + 1;
                 } catch (IOException | ClassNotFoundException e) {
-                    System.out.println("No previous user data found or error: " + e.getMessage());
+                    System.out.println("IO Exception" + e.getMessage());
                 }
 
                 do
@@ -47,8 +49,12 @@ public class BankingMain{
                         usrinpsc.nextLine();
                         switch(usrinp2){
                             case 1:
-                                //Pushtofile
-                                System.out.println("Appended\n");
+                                try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Bankdata.ser", true))) {
+                                    oos.writeObject(newUser);
+                                    System.out.println("Appended");
+                                } catch (IOException e) {
+                                    System.out.println("IO Exception" + e.getMessage());
+                                }
                                 Finish = true;
                                 break;
                             case 2:

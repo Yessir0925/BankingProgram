@@ -1,8 +1,9 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Userdata {
+public class Userdata implements Serializable {
     private String Username;
     private String Password;
     private int Usercode;
