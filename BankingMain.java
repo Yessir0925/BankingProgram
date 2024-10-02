@@ -12,7 +12,6 @@ public class BankingMain{
 
         @Override
         protected void writeStreamHeader() throws IOException {
-            // Do nothing to avoid writing a header when appending
             reset();
         }
     }
@@ -31,9 +30,17 @@ public class BankingMain{
                 int usercodemax = 0;    
 
                 try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
-                    Userdata lastUser = (Userdata) fileinput.readObject();
-                    usercodeinp = lastUser.getUsercode();
-                    usercodemax = usercodeinp + 1;
+                    while (true) {
+                        Userdata lastUser;
+                        try {
+                            lastUser = (Userdata) fileinput.readObject();
+                        } catch (EOFException e) {
+                            break;
+                        }
+                        usercodeinp = lastUser.getUsercode();
+                        usercodemax = usercodeinp + 1;
+                    }
+                    System.out.println("Incremented Usercodemax - " + usercodemax);
                 } catch (IOException | ClassNotFoundException e) {
                     System.out.println("IO Exception - " + e.getMessage());
                     usercodemax = 1;
@@ -41,7 +48,7 @@ public class BankingMain{
 
                 do
                 {                    
-                    System.out.print("Enter Name - ");
+                    System.out.print("Enter username - ");
                     String usernameinp = usrinpsc.nextLine();
                     System.out.print("Enter Password - ");
                     String userpasswordinp = usrinpsc.nextLine();
@@ -57,7 +64,9 @@ public class BankingMain{
                         usrinpsc.nextLine();
                         switch(usrinp2){
                             case 1:
-                                try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Bankdata.ser", true))) {
+                                try{
+                                    FileOutputStream fos = new FileOutputStream("Bankdata.ser", true);
+                                    ObjectOutputStream oos;
                                     if (new File("Bankdata.ser").length() == 0) {
                                         oos = new ObjectOutputStream(fos); // Write header for the first time
                                     } else {
@@ -65,7 +74,7 @@ public class BankingMain{
                                     }
                                     oos.writeObject(newUser);
                                     oos.close();
-                                    System.out.println("Appended");
+                                    System.out.println("Appended\n");
                                 } catch (IOException e) {
                                     System.out.println("IO Exception - " + e.getMessage());
                                 }
@@ -126,18 +135,31 @@ public class BankingMain{
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     
     
-    static void GlobalFileView() {
-        try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
-            while (true) {
-                try {
-                    Userdata user = (Userdata) fileinput.readObject();
-                    System.out.println(user.getallUserData());
-                } catch (EOFException e) {
-                    break;
+    static void Admin(Scanner usrinpsc) {
+        System.out.println("1. Global Fileview");
+        System.out.println("2. Remove\n");
+        int adminmenu = usrinpsc.nextInt();
+        switch(adminmenu){
+            case 1:
+                System.out.println("Global Fileview");
+                try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
+                    while (true) {
+                        try {
+                            Userdata user = (Userdata) fileinput.readObject();
+                            System.out.println(user.getallUserData());
+                        } catch (EOFException e) {
+                            break;
+                        }
+                    }
+                } catch (IOException | ClassNotFoundException e) {
+                    System.out.println("IO Exception - " + e.getMessage());
                 }
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("IO Exception - " + e.getMessage());
+                System.out.print("\n");
+                break;
+            case 2:
+                System.out.println("Remove\n");
+                //Remove User via usercode
+                break;
         }
     }
     
@@ -160,16 +182,19 @@ public class BankingMain{
                     finishmenu = false;
                     break;
                 case 2:
-                    System.out.println("\nLogin");
-                    finishmenu = false;
+                    //Check if Appdata is empty
+                        System.out.println("\nLogin\n");
+                        finishmenu = false;
+                    //If filled then go to transactions
+                        //Transactions(); [Query]
                     break;
                 case 3:
                     System.out.println("\nShut Down");
                     finishmenu = true;
                     break;
-                case 4:
-                    System.out.println("Global File View");
-                    GlobalFileView();
+                case 1423:
+                    System.out.println("\nAdmin");
+                    Admin(usrinpsc);
                     finishmenu = false;
             }
         }while(finishmenu == false);
