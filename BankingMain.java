@@ -29,22 +29,24 @@ public class BankingMain{
                 int usercodeinp = 0;
                 int usercodemax = 0;    
 
-                try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
-                    while (true) {
-                        Userdata lastUser;
-                        try {
-                            lastUser = (Userdata) fileinput.readObject();
-                        } catch (EOFException e) {
-                            break;
-                        }
-                        usercodeinp = lastUser.getUsercode();
-                        usercodemax = usercodeinp + 1;
-                    }
-                    System.out.println("Incremented Usercodemax - " + usercodemax);
-                } catch (IOException | ClassNotFoundException e) {
-                    System.out.println("IO Exception - " + e.getMessage());
+                if (Checkempty()) {
                     usercodemax = 1;
-                }
+                } else {
+                    try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
+                        while (true) {
+                            try {
+                                Userdata lastUser = (Userdata) fileinput.readObject();
+                                usercodeinp = lastUser.getUsercode();
+                                usercodemax = usercodeinp + 1; 
+                            } catch (EOFException e) {
+                                break; 
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        if(Checkempty() == false);
+                            System.out.println("IO Exception - " + e.getMessage());
+                    }
+            }
 
                 do
                 {                    
@@ -76,7 +78,8 @@ public class BankingMain{
                                     oos.close();
                                     System.out.println("Appended\n");
                                 } catch (IOException e) {
-                                    System.out.println("IO Exception - " + e.getMessage());
+                                    if(Checkempty() == false);
+                                        System.out.println("IO Exception - " + e.getMessage());
                                 }
                                 Finish = true;
                                 break;
@@ -136,7 +139,7 @@ public class BankingMain{
     
     static void Admin(Scanner usrinpsc) {
         System.out.println("1. Global Fileview");
-        System.out.println("2. Remove\n");
+        System.out.println("2. Wipe Data file\n");
         int adminmenu = usrinpsc.nextInt();
         switch(adminmenu){
             case 1:
@@ -151,14 +154,41 @@ public class BankingMain{
                         }
                     }
                 } catch (IOException | ClassNotFoundException e) {
-                    System.out.println("IO Exception - " + e.getMessage());
+                    if(Checkempty() == false){
+                        System.out.println("IO Exception - " + e.getMessage());
+                    } else {
+                        System.out.println("Database Empty");
+                    }
                 }
                 System.out.print("\n");
                 break;
+            case 2:
+                try (FileOutputStream fos = new FileOutputStream("Bankdata.ser")) {
+                    fos.write(new byte[0]);
+                    if(Checkempty() == true){
+                        System.out.println("Successfully Cleared\n");
+                    } else {
+                        System.out.println("Error clearing\n");
+                    }
+                } catch (IOException e) {
+                    if(Checkempty() == false){
+                        System.out.println("IO Exception - " + e.getMessage());
+                    }
+                }
+                break;
         }
     }
-    
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    static boolean Checkempty(){
+        File isempty = new File("Bankdata.ser");
+        if(isempty.length() == 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
