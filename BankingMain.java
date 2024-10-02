@@ -5,6 +5,18 @@ import java.time.LocalDateTime;
 
 public class BankingMain{
 
+    static class AppendableObjectOutputStream extends ObjectOutputStream {
+        public AppendableObjectOutputStream(OutputStream out) throws IOException {
+            super(out);
+        }
+
+        @Override
+        protected void writeStreamHeader() throws IOException {
+            // Do nothing to avoid writing a header when appending
+            reset();
+        }
+    }
+
     static void CreateUser(Scanner usrinpsc){
         //Create User
         System.out.println("1. Continue Create new user");
@@ -46,7 +58,13 @@ public class BankingMain{
                         switch(usrinp2){
                             case 1:
                                 try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("Bankdata.ser", true))) {
-                                    //oos.writeObject(newUser);
+                                    if (new File("Bankdata.ser").length() == 0) {
+                                        oos = new ObjectOutputStream(fos); // Write header for the first time
+                                    } else {
+                                        oos = new AppendableObjectOutputStream(fos); // Skip header for appending
+                                    }
+                                    oos.writeObject(newUser);
+                                    oos.close();
                                     System.out.println("Appended");
                                 } catch (IOException e) {
                                     System.out.println("IO Exception - " + e.getMessage());
@@ -106,6 +124,27 @@ public class BankingMain{
     }
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
+    static void GlobalFileView() {
+        try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
+            while (true) {
+                try {
+                    Userdata user = (Userdata) fileinput.readObject();
+                    System.out.println(user.getallUserData());
+                } catch (EOFException e) {
+                    break;
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("IO Exception - " + e.getMessage());
+        }
+    }
+    
+
+
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public static void main(String[] args) {
         Scanner usrinpsc = new Scanner(System.in);
         boolean finishmenu = false;
@@ -128,6 +167,10 @@ public class BankingMain{
                     System.out.println("\nShut Down");
                     finishmenu = true;
                     break;
+                case 4:
+                    System.out.println("Global File View");
+                    GlobalFileView();
+                    finishmenu = false;
             }
         }while(finishmenu == false);
         usrinpsc.close();
