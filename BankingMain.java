@@ -68,9 +68,9 @@ public class BankingMain{
                                     FileOutputStream fos = new FileOutputStream("Bankdata.ser", true);
                                     ObjectOutputStream oos;
                                     if (new File("Bankdata.ser").length() == 0) {
-                                        oos = new ObjectOutputStream(fos); // Write header for the first time
+                                        oos = new ObjectOutputStream(fos);
                                     } else {
-                                        oos = new AppendableObjectOutputStream(fos); // Skip header for appending
+                                        oos = new AppendableObjectOutputStream(fos);
                                     }
                                     oos.writeObject(newUser);
                                     oos.close();
@@ -102,7 +102,6 @@ public class BankingMain{
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------s
     static void Login(){
-        //Login
         System.out.println("Login");
                     Scanner login = new Scanner(System.in);
                     System.out.println("Username - ");
@@ -156,10 +155,6 @@ public class BankingMain{
                 }
                 System.out.print("\n");
                 break;
-            case 2:
-                System.out.println("Remove\n");
-                //Remove User via usercode
-                break;
         }
     }
     
@@ -182,11 +177,14 @@ public class BankingMain{
                     finishmenu = false;
                     break;
                 case 2:
-                    //Check if Appdata is empty
+                    File appdataFile = new File("Appdata.txt");
+                    if(appdataFile.length() == 0){
                         System.out.println("\nLogin\n");
+                        //Login
                         finishmenu = false;
-                    //If filled then go to transactions
+                    } else {
                         //Transactions(); [Query]
+                    }
                     break;
                 case 3:
                     System.out.println("\nShut Down");

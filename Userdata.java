@@ -38,6 +38,9 @@ public class Userdata implements Serializable {
     }
 
     //Getters
+    public String getTransTimeCode() {
+        return "Code: " + Usercode + ", Time: " + time + ", Balance: " + balance;
+    }
 
     public String getNameandPassword() {
         return "Username: " + Username + ", Password: " + Password ;
