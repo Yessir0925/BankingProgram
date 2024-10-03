@@ -56,7 +56,7 @@ public class BankingMain{
                     String userpasswordinp = usrinpsc.nextLine();
                     System.out.print("Re-enter password - ");
                     String userpasswordinp2 = usrinpsc.nextLine();
-                    if(userpasswordinp.length() >= 8 && userpasswordinp.equals(userpasswordinp2) == true){
+                    if(userpasswordinp.length() >= 8 && userpasswordinp.equals(userpasswordinp2) == true && isPresent(usernameinp) == false){
                         LocalDateTime currentDateandTime = LocalDateTime.now();
                         newUser.newUserData(usernameinp, userpasswordinp, usercodemax, currentDateandTime, 0.00);
                         System.out.println("\n" + newUser.getNameandPassword());
@@ -92,9 +92,11 @@ public class BankingMain{
                         System.out.println("Password must be at least 8 characters long\n");
                     } else if(userpasswordinp.equals(userpasswordinp2) == false){
                         System.out.println("Passwords do not match\n");
+                    } else if(isPresent(usernameinp) == true){
+                        System.out.println("Select another username\n");
                     }
                 }while(Finish == false);
-                break;
+                    break;
 
             case 2:
                 System.out.println("\nMenu");
@@ -140,7 +142,7 @@ public class BankingMain{
     static void Admin(Scanner usrinpsc) {
         System.out.println("1. Global Fileview");
         System.out.println("2. Wipe Data file");
-        System.out.println("3. Query User\n");
+        System.out.print("3. Query User\n - ");
         int adminmenu = usrinpsc.nextInt();
         usrinpsc.nextLine();
         switch(adminmenu){
@@ -165,18 +167,7 @@ public class BankingMain{
                 System.out.print("\n");
                 break;
             case 2:
-                try (FileOutputStream fos = new FileOutputStream("Bankdata.ser")) {
-                    fos.write(new byte[0]);
-                    if(Checkempty() == true){
-                        System.out.println("Successfully Cleared\n");
-                    } else {
-                        System.out.println("Error clearing\n");
-                    }
-                } catch (IOException e) {
-                    if(Checkempty() == false){
-                        System.out.println("IO Exception - " + e.getMessage());
-                    }
-                }
+                wipeFile("Bankdata.ser");
                 break;
             case 3:
                 System.out.print("Enter Query - ");
@@ -200,6 +191,25 @@ public class BankingMain{
             return false;
         }
     }
+
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    static void wipeFile(String filename) {
+        try (FileOutputStream fos = new FileOutputStream(filename)) {
+            // Writing nothing will effectively clear the file
+            fos.write(new byte[0]);
+            if(Checkempty() == true){
+                System.out.println("Successfully Cleared\n");
+            } else {
+                System.out.println("Error clearing\n");
+            }
+        } catch (IOException e) {
+            System.out.println("IO Exception - " + e.getMessage());
+        }
+    }
+
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -231,25 +241,36 @@ public class BankingMain{
     public static void main(String[] args) {
         Scanner usrinpsc = new Scanner(System.in);
         boolean finishmenu = false;
+        File appdataFile = new File("Appdata.txt");
         do{
-            System.out.println("1. Create User");
-            System.out.println("2. Login");
-            System.out.print("3. Exit\n-  ");
+            if(appdataFile.length() == 0){
+                System.out.println("1. Create User");
+                System.out.println("2. Login");
+                System.out.print("3. Exit\n-  ");
+            } else {
+                System.out.println("1. Logout");
+                System.out.println("2. Transactions");
+                System.out.print("3. Exit\n-  ");
+            }
             int menuinpint = usrinpsc.nextInt();
             switch(menuinpint){
                 case 1:
-                    System.out.println("\nCreate User");
-                    CreateUser(usrinpsc);
-                    finishmenu = false;
-                    break;
-                case 2:
-                    File appdataFile = new File("Appdata.txt");
                     if(appdataFile.length() == 0){
-                        System.out.println("\nLogin\n");
-                        //Login
+                        System.out.println("\nCreate User");
+                        CreateUser(usrinpsc);
                         finishmenu = false;
                     } else {
-                        //Transactions(); [Query]
+                        wipeFile("Appdata.txt");
+                        wipeFile("PersonalBankdata.ser");
+                    }
+                    break;
+                case 2:
+                    if(appdataFile.length() == 0){
+                        System.out.println("\nLogin\n");
+                        //Login()s
+                        finishmenu = false;
+                    } else {
+                        //Transactions()
                     }
                     break;
                 case 3:
