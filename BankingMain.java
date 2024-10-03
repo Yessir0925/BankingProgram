@@ -140,7 +140,7 @@ public class BankingMain{
     static void Admin(Scanner usrinpsc) {
         System.out.println("1. Global Fileview");
         System.out.println("2. Wipe Data file");
-        System.out.print("3. Query User\n - ");
+        System.out.println("3. Query User\n");
         int adminmenu = usrinpsc.nextInt();
         usrinpsc.nextLine();
         switch(adminmenu){
