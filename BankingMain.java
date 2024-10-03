@@ -139,8 +139,10 @@ public class BankingMain{
     
     static void Admin(Scanner usrinpsc) {
         System.out.println("1. Global Fileview");
-        System.out.println("2. Wipe Data file\n");
+        System.out.println("2. Wipe Data file");
+        System.out.print("3. Query User\n - ");
         int adminmenu = usrinpsc.nextInt();
+        usrinpsc.nextLine();
         switch(adminmenu){
             case 1:
                 System.out.println("Global Fileview");
@@ -176,6 +178,15 @@ public class BankingMain{
                     }
                 }
                 break;
+            case 3:
+                System.out.print("Enter Query - ");
+                String Queryname = usrinpsc.nextLine();
+                if(isPresent(Queryname) == true){
+                    System.out.println("Exists");
+                } else {
+                    System.out.println("Does not exists");
+                }
+                System.out.print("\n");
         }
     }
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -188,6 +199,31 @@ public class BankingMain{
         } else {
             return false;
         }
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    static boolean isPresent(String Queryname){
+        try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
+            while (true) {
+                try {
+                    Userdata user = (Userdata) fileinput.readObject();
+                    if(Queryname.equals(user.getUsername())){
+                        return true;
+                    }
+                } catch (EOFException e) {
+                    break;
+                }
+            }   
+        } catch (IOException | ClassNotFoundException e) {
+            if(Checkempty() == false){
+                System.out.println("IO Exception - " + e.getMessage());
+            } else {
+                System.out.println("Database Empty");
+            }
+        }
+        return false;
     }
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
