@@ -77,34 +77,60 @@ public class BankingMain{
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-    static void Login(){
+    static void Login(Scanner usrinpsc){
         System.out.println("Login");
-                    Scanner login = new Scanner(System.in);
-                    System.out.println("Username - ");
-                    String loginusrinp = login.nextLine();
-                    System.out.println("Password - ");
-                    String loginpassinp = login.nextLine();
-                    //if username and password match
-                    login.close();
-        
-        
-                    //if appdata file doesn't exist
-                        Scanner saveappdata = new Scanner(System.in);
-                        System.out.println("Save Login information? - ");
-                        String saveappdatausrinp = saveappdata.nextLine();
-                        if(saveappdatausrinp.equals("yes") || saveappdatausrinp.equals("y")){
-                            //Create file with appdata
-                            System.out.println("Login information saved");
+            usrinpsc.nextLine();
+            System.out.print("Username - ");
+            String loginusrinp = usrinpsc.nextLine();
+            System.out.print("Password - ");
+            String loginpassinp = usrinpsc.nextLine();
+
+            boolean Usrpassmatch = false;
+
+            try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
+                for(int i = 0   ; i < isPresent(loginusrinp); i++){
+                    try {
+                        Userdata user = (Userdata) fileinput.readObject();
+                        if(loginusrinp.equals(user.getUsername())){
+                            System.out.println(user.getNameandPassword());
+                            if(loginpassinp.equals(user.getPassword())){
+                                Usrpassmatch = true;
+                                break;
+                            } else {
+                                Usrpassmatch = false;
+                                break;
+                            }
                         }
-                        saveappdata.close();
-        
-                    System.out.println("Update Account Info");
-                    
-        
-                    System.out.println("Remove Account");
-        
-        
-                    System.out.println("Moderator Access");
+                    } catch (EOFException e) {
+                        break;
+                    }
+                }   
+            } catch (IOException | ClassNotFoundException e) {
+                if(Checkempty() == false){
+                    System.out.println("IO Exception - " + e.getMessage());
+                } else {
+                    System.out.println("Database Empty");
+                }
+            }
+    
+            if(Usrpassmatch = true){
+                System.out.println("Grant access\n");
+            } else {
+                System.out.println("Wrong Credentials\n");
+            }
+            
+
+            
+            //Add transaction
+
+
+            //System.out.println("Update Account Info");
+            
+
+            //System.out.println("Remove Account");
+
+
+            //System.out.println("Moderator Access");
     }
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -292,8 +318,7 @@ public class BankingMain{
                     break;
                 case 2:
                     if(appdataFile.length() == 0){
-                        System.out.println("\nLogin\n");
-                        //Login();
+                        Login(usrinpsc);
                         finishmenu = false;
                     } else {
                         //Transactions()
