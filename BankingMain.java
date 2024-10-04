@@ -16,8 +16,10 @@ public class BankingMain{
         }
     }
 
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     static void CreateUser(Scanner usrinpsc){
-        //Create User
         System.out.println("1. Continue Create new user");
         System.out.print("2. Back to Menu\n-  ");
         int usrinp = usrinpsc.nextInt();
@@ -26,27 +28,8 @@ public class BankingMain{
             case 1:
                 boolean Finish = false;
                 Userdata newUser = new Userdata();
-                int usercodeinp = 0;
-                int usercodemax = 0;    
 
-                if (Checkempty()) {
-                    usercodemax = 1;
-                } else {
-                    try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
-                        while (true) {
-                            try {
-                                Userdata lastUser = (Userdata) fileinput.readObject();
-                                usercodeinp = lastUser.getUsercode();
-                                usercodemax = usercodeinp + 1; 
-                            } catch (EOFException e) {
-                                break; 
-                            }
-                        }
-                    } catch (IOException | ClassNotFoundException e) {
-                        if(Checkempty() == false);
-                            System.out.println("IO Exception - " + e.getMessage());
-                    }
-            }
+                int usercodemax = getUserCodeMax();
 
                 do
                 {                    
@@ -66,21 +49,7 @@ public class BankingMain{
                         usrinpsc.nextLine();
                         switch(usrinp2){
                             case 1:
-                                try{
-                                    FileOutputStream fos = new FileOutputStream("Bankdata.ser", true);
-                                    ObjectOutputStream oos;
-                                    if (new File("Bankdata.ser").length() == 0) {
-                                        oos = new ObjectOutputStream(fos);
-                                    } else {
-                                        oos = new AppendableObjectOutputStream(fos);
-                                    }
-                                    oos.writeObject(newUser);
-                                    oos.close();
-                                    System.out.println("Appended\n");
-                                } catch (IOException e) {
-                                    if(Checkempty() == false);
-                                        System.out.println("IO Exception - " + e.getMessage());
-                                }
+                                Addtofile(newUser);
                                 Finish = true;
                                 break;
                             case 2:
@@ -105,7 +74,9 @@ public class BankingMain{
     }
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------s
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
     static void Login(){
         System.out.println("Login");
                     Scanner login = new Scanner(System.in);
@@ -213,6 +184,34 @@ public class BankingMain{
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    static int getUserCodeMax(){
+        int usercodeinp = 0;
+                int usercodemax = 0;    
+                if (Checkempty()) {
+                    usercodemax = 1;
+                } else {
+                    try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
+                        while (true) {
+                            try {
+                                Userdata lastUser = (Userdata) fileinput.readObject();
+                                usercodeinp = lastUser.getUsercode();
+                                usercodemax = usercodeinp + 1; 
+                            } catch (EOFException e) {
+                                break; 
+                            }
+                        }
+                    } catch (IOException | ClassNotFoundException e) {
+                        if(Checkempty() == false);
+                            System.out.println("IO Exception - " + e.getMessage());
+
+                    }
+                }
+                return usercodemax;
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
     static int isPresent(String Queryname){
         int NameLocation = 1;
@@ -240,6 +239,31 @@ public class BankingMain{
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    static void Addtofile(Userdata newUser){
+        try{
+            FileOutputStream fos = new FileOutputStream("Bankdata.ser", true);
+            ObjectOutputStream oos;
+            if (new File("Bankdata.ser").length() == 0) {
+                oos = new ObjectOutputStream(fos);
+            } else {
+                oos = new AppendableObjectOutputStream(fos);
+            }
+            oos.writeObject(newUser);
+            oos.close();
+            System.out.println("Appended\n");
+        } catch (IOException e) {
+            if(Checkempty() == false);
+                System.out.println("IO Exception - " + e.getMessage());
+        }
+    }
+
+
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
     public static void main(String[] args) {
         Scanner usrinpsc = new Scanner(System.in);
         boolean finishmenu = false;
