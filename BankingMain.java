@@ -56,7 +56,7 @@ public class BankingMain{
                     String userpasswordinp = usrinpsc.nextLine();
                     System.out.print("Re-enter password - ");
                     String userpasswordinp2 = usrinpsc.nextLine();
-                    if(userpasswordinp.length() >= 8 && userpasswordinp.equals(userpasswordinp2) == true && isPresent(usernameinp) == false){
+                    if(userpasswordinp.length() >= 8 && userpasswordinp.equals(userpasswordinp2) == true && isPresent(usernameinp) == -1){
                         LocalDateTime currentDateandTime = LocalDateTime.now();
                         newUser.newUserData(usernameinp, userpasswordinp, usercodemax, currentDateandTime, 0.00);
                         System.out.println("\n" + newUser.getNameandPassword());
@@ -92,7 +92,7 @@ public class BankingMain{
                         System.out.println("Password must be at least 8 characters long\n");
                     } else if(userpasswordinp.equals(userpasswordinp2) == false){
                         System.out.println("Passwords do not match\n");
-                    } else if(isPresent(usernameinp) == true){
+                    } else if(isPresent(usernameinp) != -1){
                         System.out.println("Select another username\n");
                     }
                 }while(Finish == false);
@@ -172,8 +172,8 @@ public class BankingMain{
             case 3:
                 System.out.print("Enter Query - ");
                 String Queryname = usrinpsc.nextLine();
-                if(isPresent(Queryname) == true){
-                    System.out.println("Exists");
+                if(isPresent(Queryname) != -1){
+                    System.out.println("Exists at - " + isPresent(Queryname));
                 } else {
                     System.out.println("Does not exists");
                 }
@@ -198,7 +198,6 @@ public class BankingMain{
 
     static void wipeFile(String filename) {
         try (FileOutputStream fos = new FileOutputStream(filename)) {
-            // Writing nothing will effectively clear the file
             fos.write(new byte[0]);
             if(Checkempty() == true){
                 System.out.println("Successfully Cleared\n");
@@ -214,14 +213,17 @@ public class BankingMain{
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    static boolean isPresent(String Queryname){
+
+    static int isPresent(String Queryname){
+        int NameLocation = 1;
         try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
             while (true) {
                 try {
                     Userdata user = (Userdata) fileinput.readObject();
                     if(Queryname.equals(user.getUsername())){
-                        return true;
+                        return NameLocation;
                     }
+                    NameLocation++;
                 } catch (EOFException e) {
                     break;
                 }
@@ -233,7 +235,7 @@ public class BankingMain{
                 System.out.println("Database Empty");
             }
         }
-        return false;
+        return -1;
     }
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -267,7 +269,7 @@ public class BankingMain{
                 case 2:
                     if(appdataFile.length() == 0){
                         System.out.println("\nLogin\n");
-                        //Login()s
+                        //Login();
                         finishmenu = false;
                     } else {
                         //Transactions()
