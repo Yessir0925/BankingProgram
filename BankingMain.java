@@ -32,14 +32,15 @@ public class BankingMain{
                 int usercodemax = getUserCodeMax();
 
                 do
-                {                    
+                {    
+                    Boolean SingularSum = false;                
                     System.out.print("Enter username - ");
                     String usernameinp = usrinpsc.nextLine();
                     System.out.print("Enter Password - ");
                     String userpasswordinp = usrinpsc.nextLine();
                     System.out.print("Re-enter password - ");
                     String userpasswordinp2 = usrinpsc.nextLine();
-                    if(userpasswordinp.length() >= 8 && userpasswordinp.equals(userpasswordinp2) == true && isPresent(usernameinp) == -1){
+                    if(userpasswordinp.length() >= 8 && userpasswordinp.equals(userpasswordinp2) == true && isPresent(usernameinp, SingularSum) == -1){
                         LocalDateTime currentDateandTime = LocalDateTime.now();
                         newUser.newUserData(usernameinp, userpasswordinp, usercodemax, currentDateandTime, 0.00);
                         System.out.println("\n" + newUser.getNameandPassword());
@@ -49,7 +50,8 @@ public class BankingMain{
                         usrinpsc.nextLine();
                         switch(usrinp2){
                             case 1:
-                                Addtofile(newUser);
+                                String filename = "Bankdata.ser";
+                                Addtofile(newUser, filename);
                                 Finish = true;
                                 break;
                             case 2:
@@ -61,7 +63,7 @@ public class BankingMain{
                         System.out.println("Password must be at least 8 characters long\n");
                     } else if(userpasswordinp.equals(userpasswordinp2) == false){
                         System.out.println("Passwords do not match\n");
-                    } else if(isPresent(usernameinp) != -1){
+                    } else if(isPresent(usernameinp, SingularSum) != -1){
                         System.out.println("Select another username\n");
                     }
                 }while(Finish == false);
@@ -88,11 +90,11 @@ public class BankingMain{
             boolean Usrpassmatch = false;
 
             try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
-                for(int i = 0   ; i < isPresent(loginusrinp); i++){
+                Boolean SingularSum = false;
+                for(int i = 0   ; i < isPresent(loginusrinp, SingularSum); i++){
                     try {
                         Userdata user = (Userdata) fileinput.readObject();
                         if(loginusrinp.equals(user.getUsername())){
-                            System.out.println(user.getNameandPassword());
                             if(loginpassinp.equals(user.getPassword())){
                                 Usrpassmatch = true;
                                 break;
@@ -113,25 +115,21 @@ public class BankingMain{
                 }
             }
     
-            if(Usrpassmatch = true){
-                System.out.println("Grant access\n");
+            if(Usrpassmatch == true){
+                try (FileWriter fw = new FileWriter("Appdata.txt")) {
+                    fw.write(loginusrinp);
+                    Boolean SingularSum = true;
+                    isPresent(loginpassinp, SingularSum);
+                    System.out.println("Logged In\n");
+                } catch (IOException e) {
+                    System.out.println("IO Exception - " + e.getMessage());
+                }
             } else {
                 System.out.println("Wrong Credentials\n");
             }
-            
 
-            
-            //Add transaction
-
-
-            //System.out.println("Update Account Info");
-            
-
-            //System.out.println("Remove Account");
-
-
-            //System.out.println("Moderator Access");
     }
+
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     
@@ -145,23 +143,8 @@ public class BankingMain{
         switch(adminmenu){
             case 1:
                 System.out.println("Global Fileview");
-                try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
-                    while (true) {
-                        try {
-                            Userdata user = (Userdata) fileinput.readObject();
-                            System.out.println(user.getallUserData());
-                        } catch (EOFException e) {
-                            break;
-                        }
-                    }
-                } catch (IOException | ClassNotFoundException e) {
-                    if(Checkempty() == false){
-                        System.out.println("IO Exception - " + e.getMessage());
-                    } else {
-                        System.out.println("Database Empty");
-                    }
-                }
-                System.out.print("\n");
+                String filename = "Bankdata.ser";
+                Readfullfile(filename);
                 break;
             case 2:
                 wipeFile("Bankdata.ser");
@@ -169,8 +152,9 @@ public class BankingMain{
             case 3:
                 System.out.print("Enter Query - ");
                 String Queryname = usrinpsc.nextLine();
-                if(isPresent(Queryname) != -1){
-                    System.out.println("Exists at - " + isPresent(Queryname));
+                Boolean SingularSum = false;
+                if(isPresent(Queryname, SingularSum) != -1){
+                    System.out.println("Exists at - " + isPresent(Queryname, SingularSum));
                 } else {
                     System.out.println("Does not exists");
                 }
@@ -189,6 +173,34 @@ public class BankingMain{
         }
     }
 
+
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    static void Readfullfile(String filename){
+        try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream(filename))) {
+            while (true) {
+                try {
+                    Userdata user = (Userdata) fileinput.readObject();
+                    System.out.println(user.getallUserData());
+                } catch (EOFException e) {
+                    break;
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            if(Checkempty() == false){
+                System.out.println("IO Exception - " + e.getMessage());
+            } else {
+                System.out.println("Database Empty");
+            }
+        }
+        System.out.print("\n");
+    }
+
+
+
+
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -197,10 +209,9 @@ public class BankingMain{
         try (FileOutputStream fos = new FileOutputStream(filename)) {
             fos.write(new byte[0]);
             if(Checkempty() == true){
-                System.out.println("Successfully Cleared\n");
-            } else {
-                System.out.println("Error clearing\n");
+                System.out.println("Successfully Cleared");
             }
+            System.out.println("\n");
         } catch (IOException e) {
             System.out.println("IO Exception - " + e.getMessage());
         }
@@ -239,14 +250,19 @@ public class BankingMain{
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-    static int isPresent(String Queryname){
+    static int isPresent(String Queryname, Boolean SingularSum){
         int NameLocation = 1;
         try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream("Bankdata.ser"))) {
+            String filename = "PersonalBankdata.ser";
             while (true) {
                 try {
                     Userdata user = (Userdata) fileinput.readObject();
-                    if(Queryname.equals(user.getUsername())){
+                    if(Queryname.equals(user.getUsername()) && SingularSum == false){
+                        System.out.println(user.getUsername());
                         return NameLocation;
+                    } else if(Queryname.equals(user.getUsername()) && SingularSum == true){
+                        System.out.println(user.getUsername());
+                        Addtofile(user, filename);
                     }
                     NameLocation++;
                 } catch (EOFException e) {
@@ -267,11 +283,11 @@ public class BankingMain{
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-    static void Addtofile(Userdata newUser){
+    static void Addtofile(Userdata newUser, String filename){
         try{
-            FileOutputStream fos = new FileOutputStream("Bankdata.ser", true);
+            FileOutputStream fos = new FileOutputStream(filename, true);
             ObjectOutputStream oos;
-            if (new File("Bankdata.ser").length() == 0) {
+            if (new File(filename).length() == 0) {
                 oos = new ObjectOutputStream(fos);
             } else {
                 oos = new AppendableObjectOutputStream(fos);
@@ -288,7 +304,25 @@ public class BankingMain{
 
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
+    static void Transactions(Scanner usrinpsc){
+        System.out.println("1. View Transaction");
+        System.out.println("2. Add Transaction");
+        int Transactionmenu = usrinpsc.nextInt();
+        if(Transactionmenu == 1){
+            String filename = "PersonalBankdata.ser";
+            Readfullfile(filename);
+        } else if(Transactionmenu == 2){
+            //Transaction
+            System.out.println("To develop");
+        }
+    }
 
+
+    
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     public static void main(String[] args) {
         Scanner usrinpsc = new Scanner(System.in);
@@ -321,7 +355,8 @@ public class BankingMain{
                         Login(usrinpsc);
                         finishmenu = false;
                     } else {
-                        //Transactions()
+                        System.out.println("\nTransactions");
+                        Transactions(usrinpsc);
                     }
                     break;
                 case 3:
