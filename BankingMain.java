@@ -152,7 +152,8 @@ public class BankingMain{
             case 1:
                 System.out.println("Global Fileview");
                 String filename = "Bankdata.ser";
-                Readfullfile(filename);
+                Boolean isAdmin = true;
+                Readfullfile(isAdmin,filename);
                 break;
             case 2:
                 wipeFile("Bankdata.ser");
@@ -211,12 +212,16 @@ public class BankingMain{
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    static void Readfullfile(String filename){
+    static void Readfullfile(Boolean isAdmin,String filename){
         try (ObjectInputStream fileinput = new ObjectInputStream(new FileInputStream(filename))) {
             while (true) {
                 try {
                     Userdata user = (Userdata) fileinput.readObject();
-                    System.out.println(user.getprivateUserData());
+                    if(isAdmin == true){
+                        System.out.println(user.getallUserData());
+                    } else {
+                        System.out.println(user.getprivateUserData());
+                    }
                 } catch (EOFException e) {
                     break;
                 }
@@ -351,7 +356,8 @@ public class BankingMain{
         usrinpsc.nextLine();
         if(Transactionmenu == 1){
             String filename = "PersonalBankdata.ser";
-            Readfullfile(filename);
+            Boolean isAdmin = false;
+            Readfullfile(isAdmin,filename);
         } else if(Transactionmenu == 2){
             System.out.print("Enter Transaction Amount - ");
             double Addtransactions = usrinpsc.nextDouble();
